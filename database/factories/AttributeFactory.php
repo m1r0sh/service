@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\ServiceType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,8 +17,13 @@ class AttributeFactory extends Factory
      */
     public function definition(): array
     {
+        $serviceType = ServiceType::factory()->create(10);
+
         return [
-            //
+            'name' => $this->faker->name,
+            'type' => $this->faker->text(10),
+            'description' => $this->faker->text(20),
+            'service_type_id' => $serviceType->id,
         ];
     }
 }
