@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ServiceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JwtAuth\AuthController;
@@ -31,4 +32,6 @@ Route::group([
     Route::post('refresh',[AuthController::class, 'refresh']);
     Route::post('me',[AuthController::class, 'me']);
 
+
+    Route::resource('services', ServiceController::class);
 });

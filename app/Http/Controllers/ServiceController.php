@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ServiceCreated;
 use App\Http\Requests\StoreServiceRequest;
 use App\Http\Requests\UpdateServiceRequest;
-use App\Http\Resources\ServiceResource;
 use App\Models\Service;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Twilio\Rest\Client;
 
 class ServiceController extends Controller
 {
     public function index():JsonResponse
     {
-        $service = Service::select('title', 'description', 'status', 'start_date', 'end_date')
+        $service = Service::select('title', 'description', 'status', 'start_date', 'end_date', 'executor_id', 'service_type_id')
                             ->with('executor')
                             ->with('serviceType')
                             ->get();
@@ -28,33 +29,27 @@ class ServiceController extends Controller
 
         return response()->json([
             'status' => JsonResponse::HTTP_OK,
-            'data' => ServiceResource::collection($service)
+            'data' => $service
         ]);
     }
 
-    public function store(StoreServiceRequest $request, Client $twilio):JsonResponse
+    public function store(StoreServiceRequest $request, Client $twilio)
     {
         $create = Service::create($request->all());
         $currentUser = Auth::user()->toArray();
 
-        $twilio->messages->create(
-            $currentUser['phone'],
-            [
-                'from' => config('services.twilio.phone_number'),
-                'body' => "Hello, you created new Service!"
-            ]
-        );
+        event(new ServiceCreated($currentUser));
 
         return response()->json([
             'message' => 'Data created',
             'status' => JsonResponse::HTTP_CREATED,
-            'data' => new ServiceResource($create)
+            'data' => $create
         ]);
     }
 
     public function show($id):JsonResponse
     {
-        $service = Service::select('title', 'description', 'status', 'start_date', 'end_date')
+        $service = Service::select('title', 'description', 'status', 'start_date', 'end_date', 'executor_id', 'service_type_id')
                             ->where('id', $id)
                             ->with('executor')
                             ->with('serviceType')
@@ -71,7 +66,7 @@ class ServiceController extends Controller
 
         return response()->json([
             'status' => JsonResponse::HTTP_OK,
-            'data' => ServiceResource::collection($service)
+            'data' => $service
         ]);
     }
 

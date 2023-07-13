@@ -14,16 +14,18 @@ class Service extends Model
         'description',
         'status',
         'start_date',
-        'end_date'
+        'end_date',
+        'executor_id',
+        'service_type_id'
     ];
 
     public function executor()
     {
-        return $this->belongsTo(Executor::class);
+        return $this->hasOne(Executor::class, 'id', 'executor_id');
     }
 
     public function serviceType()
     {
-        return $this->belongsTo(ServiceType::class);
+        return $this->hasOne(ServiceType::class, 'id', 'service_type_id');
     }
 }

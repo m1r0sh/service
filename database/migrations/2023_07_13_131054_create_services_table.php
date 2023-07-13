@@ -19,8 +19,8 @@ return new class extends Migration
                 $table->timestamp('start_date')->nullable();
                 $table->timestamp('end_date')->nullable();
 
-                $table->unsignedBigInteger('executor_id');
-                $table->unsignedBigInteger('service_type_id');
+                $table->unsignedBigInteger('executor_id')->nullable()->default(0);
+                $table->unsignedBigInteger('service_type_id')->nullable()->default(0);
 
                 $table->foreign('executor_id')->references('id')->on('executors')->onDelete('cascade');
                 $table->foreign('service_type_id')->references('id')->on('service_types')->onDelete('cascade');

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone')->nullable();
 
-            $table->unsignedBigInteger('role_id')->default(0);
+            $table->unsignedBigInteger('role_id')->default(5);
 
             $table->foreign('role_id')->references('id')->on('roles');
 

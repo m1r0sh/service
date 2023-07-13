@@ -3,6 +3,12 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Attribute;
+use App\Models\Executor;
+use App\Models\Role;
+use App\Models\Service;
+use App\Models\ServiceType;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,11 +18,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        User::factory(10)->create();
+        Service::factory(10)->create();
+        ServiceType::factory(10)->create();
+        Role::factory(10)->create();
+        Executor::factory(10)->create();
+        Attribute::factory(10)->create();
     }
 }

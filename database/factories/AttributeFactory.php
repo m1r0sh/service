@@ -17,7 +17,7 @@ class AttributeFactory extends Factory
      */
     public function definition(): array
     {
-        $serviceType = ServiceType::factory()->create(10);
+        $serviceType = ServiceType::factory()->create();
 
         return [
             'name' => $this->faker->name,

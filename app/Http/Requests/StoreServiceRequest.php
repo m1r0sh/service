@@ -14,7 +14,7 @@ class StoreServiceRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -29,7 +29,9 @@ class StoreServiceRequest extends FormRequest
             'description' => 'required|string',
             'status' => 'required|',
             'start_date' => 'required|date_format:Y-m-d H:i:s',
-            'end_date' => 'required|date_format:Y-m-d H:i:s'
+            'end_date' => 'required|date_format:Y-m-d H:i:s',
+            'executor_id' => 'required|integer',
+            'service_type_id' => 'required|integer'
         ];
     }
 

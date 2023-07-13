@@ -9,6 +9,12 @@ class Executor extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'email',
+        'phone_number',
+    ];
+
     public function services()
     {
         return $this->hasMany(Service::class);
