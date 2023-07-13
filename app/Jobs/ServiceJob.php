@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Mail\ServiceCreated;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -19,7 +20,7 @@ class ServiceJob implements ShouldQueue
      */
     public function __construct(
         protected $email,
-        protected $user,
+        protected $title,
     ){}
 
     /**
@@ -27,6 +28,6 @@ class ServiceJob implements ShouldQueue
      */
     public function handle(): void
     {
-        Mail::to($this->email)->send(new \App\Mail\ServiceCreated($this->user));
+        Mail::to($this->email)->send(new ServiceCreated($this->title));
     }
 }

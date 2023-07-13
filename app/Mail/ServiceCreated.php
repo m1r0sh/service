@@ -26,7 +26,7 @@ class ServiceCreated extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Service Created' . $this->name,
+            subject: 'Service Created',
         );
     }
 
@@ -36,7 +36,7 @@ class ServiceCreated extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.welcome',
+            view: 'emails.service',
             with: [
                 'user' => $this->name,
             ]

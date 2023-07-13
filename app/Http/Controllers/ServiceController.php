@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\ServiceCreated;
 use App\Http\Requests\StoreServiceRequest;
 use App\Http\Requests\UpdateServiceRequest;
+use App\Jobs\ServiceJob;
 use App\Models\Service;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -34,7 +35,7 @@ class ServiceController extends Controller
 
     public function store(StoreServiceRequest $request):JsonResponse
     {
-        $currentUser = auth()->user()->toArray();
+        $currentUser = auth()->user();
 
         $create = Service::create([
             'title' => $request->input('title'),
@@ -47,7 +48,7 @@ class ServiceController extends Controller
             'service_type_id' => $request->input('service_type_id')
         ]);
 
-//        event(new ServiceCreated($currentUser));
+        event(new ServiceCreated($currentUser));
 
         return response()->json([
             'message' => 'Data created',

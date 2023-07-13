@@ -23,7 +23,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         ServiceCreated::class => [
             NewServiceMailCreated::class,
-            NewServicePhoneCreated::class
+//            NewServicePhoneCreated::class
         ]
     ];
 

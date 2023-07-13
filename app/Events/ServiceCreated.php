@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Service;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -14,8 +15,9 @@ class ServiceCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-
-    public function __construct(
-        private $service
-    ){}
+    public $service;
+    public function __construct($service)
+    {
+        $this->service = $service;
+    }
 }
