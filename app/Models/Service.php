@@ -13,6 +13,7 @@ class Service extends Model
         'title',
         'description',
         'status',
+        'owner_email',
         'start_date',
         'end_date',
         'executor_id',

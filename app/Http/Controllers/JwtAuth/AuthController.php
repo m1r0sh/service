@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\JwtAuth;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\RegistrationSuccessful;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -22,6 +26,25 @@ class AuthController extends Controller
 
         return $this->respondWithToken($token);
     }
+
+    public function register(Request $request)
+    {
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        $token = JWTAuth::fromUser($user);
+
+        $this->notify(new RegistrationSuccessful());
+
+        return response()->json([
+            'success' => true,
+            'token' => $token,
+        ]);
+    }
+
 
     public function me():JsonResponse
     {

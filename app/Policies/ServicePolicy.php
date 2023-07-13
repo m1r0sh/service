@@ -21,7 +21,7 @@ class ServicePolicy
      */
     public function view(User $user, Service $service): bool
     {
-        return $user->id === $service->user_id;
+        return $user->super_admin === 1 || $user->email === $service->owner_email;
     }
 
     /**
@@ -37,7 +37,7 @@ class ServicePolicy
      */
     public function update(User $user, Service $service): bool
     {
-        return $user->id === $service->user_id;
+        return $user->super_admin === 1 || $user->email === $service->owner_email;
     }
 
     /**
@@ -45,7 +45,7 @@ class ServicePolicy
      */
     public function delete(User $user, Service $service): bool
     {
-        return $user->id === $service->user_id;
+        return $user->super_admin === 1 || $user->email === $service->owner_email;
     }
 
     /**

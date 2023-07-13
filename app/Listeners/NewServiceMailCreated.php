@@ -3,10 +3,10 @@
 namespace App\Listeners;
 
 use App\Events\ServiceCreated;
+use App\Jobs\RegisterJob;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 
 class NewServiceMailCreated implements ShouldQueue
 {
@@ -14,6 +14,6 @@ class NewServiceMailCreated implements ShouldQueue
     {
         $user = Auth::user()->toArray();
 
-        Mail::to($user['email'])->send(new \App\Mail\ServiceCreated($user['name']));
+        dispatch(new RegisterJob($user['email'], $user['name']));
     }
 }

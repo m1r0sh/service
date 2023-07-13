@@ -16,6 +16,7 @@ return new class extends Migration
                 $table->string('title');
                 $table->text('description');
                 $table->string('status');
+                $table->string('owner_email')->nullable();
                 $table->timestamp('start_date')->nullable();
                 $table->timestamp('end_date')->nullable();
 

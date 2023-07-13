@@ -8,14 +8,13 @@ use App\Http\Requests\UpdateServiceRequest;
 use App\Models\Service;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Twilio\Rest\Client;
+
 
 class ServiceController extends Controller
 {
     public function index():JsonResponse
     {
-        $service = Service::select('title', 'description', 'status', 'start_date', 'end_date', 'executor_id', 'service_type_id')
+        $service = Service::select('title', 'description', 'status', 'owner_email', 'start_date', 'end_date', 'executor_id', 'service_type_id')
                             ->with('executor')
                             ->with('serviceType')
                             ->get();
@@ -33,12 +32,22 @@ class ServiceController extends Controller
         ]);
     }
 
-    public function store(StoreServiceRequest $request, Client $twilio)
+    public function store(StoreServiceRequest $request):JsonResponse
     {
-        $create = Service::create($request->all());
-        $currentUser = Auth::user()->toArray();
+        $currentUser = auth()->user()->toArray();
 
-        event(new ServiceCreated($currentUser));
+        $create = Service::create([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'status' => $request->input('status'),
+            'owner_email' => $currentUser['email'],
+            'start_date' => $request->input('start_date'),
+            'end_date' => $request->input('end_date'),
+            'executor_id' => $request->input('executor_id'),
+            'service_type_id' => $request->input('service_type_id')
+        ]);
+
+//        event(new ServiceCreated($currentUser));
 
         return response()->json([
             'message' => 'Data created',
@@ -49,7 +58,7 @@ class ServiceController extends Controller
 
     public function show($id):JsonResponse
     {
-        $service = Service::select('title', 'description', 'status', 'start_date', 'end_date', 'executor_id', 'service_type_id')
+        $service = Service::select('title', 'description', 'status', 'owner_email', 'start_date', 'end_date', 'executor_id', 'service_type_id')
                             ->where('id', $id)
                             ->with('executor')
                             ->with('serviceType')
@@ -74,7 +83,7 @@ class ServiceController extends Controller
     {
         $update = Service::find($id);
 
-        $this->authorizeResource(Service::class, 'service');
+        $this->authorize('update', $update);
 
         if (!$update) {
             return response()->json([
@@ -88,13 +97,15 @@ class ServiceController extends Controller
         return response()->json([
             'message' => 'Data created',
             'status' => JsonResponse::HTTP_ACCEPTED,
-            'data' => new ServiceResource($update)
+            'data' => $update
         ]);
     }
 
     public function destroy($id):JsonResponse
     {
         $data = Service::find($id);
+
+        $this->authorize('delete', $data);
 
         $this->authorizeResource(Service::class, 'service');
 
@@ -110,7 +121,7 @@ class ServiceController extends Controller
         return response()->json([
             'message' => "$id id is deleted",
             'status' => JsonResponse::HTTP_NO_CONTENT,
-            'data' => new ServiceResource($data)
+            'data' => $data
         ]);
 
     }
