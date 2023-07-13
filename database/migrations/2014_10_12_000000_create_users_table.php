@@ -11,16 +11,30 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('roles', function (Blueprint $table) {
+            $table->id();
+            $table->string('role');
+            $table->timestamps();
+        });
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->tinyInteger('role')->default(0);
             $table->string('email')->unique();
+            $table->string('phone')->nullable();
+
+            $table->unsignedBigInteger('role_id')->default(0);
+
+            $table->foreign('role_id')->references('id')->on('roles');
+
+            $table->tinyInteger('super_admin')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
         });
+
+
+
     }
 
     /**

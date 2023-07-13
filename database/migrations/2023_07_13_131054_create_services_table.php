@@ -11,7 +11,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('services')){
             Schema::create('services', function (Blueprint $table) {
                 $table->id();
                 $table->string('title');
@@ -23,12 +22,12 @@ return new class extends Migration
                 $table->unsignedBigInteger('executor_id');
                 $table->unsignedBigInteger('service_type_id');
 
-                $table->foreign('executor_id')->references('id')->on('executors')->cascadeOnDelete();
-                $table->foreign('service_type_id')->references('id')->on('service_types')->cascadeOnDelete();
+                $table->foreign('executor_id')->references('id')->on('executors')->onDelete('cascade');
+                $table->foreign('service_type_id')->references('id')->on('service_types')->onDelete('cascade');
 
                 $table->timestamps();
             });
-        }
+
     }
 
     /**

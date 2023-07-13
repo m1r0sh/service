@@ -21,7 +21,7 @@ class ServicePolicy
      */
     public function view(User $user, Service $service): bool
     {
-        //
+        return $user->id === $service->user_id;
     }
 
     /**
@@ -29,7 +29,7 @@ class ServicePolicy
      */
     public function create(User $user): bool
     {
-        //
+
     }
 
     /**
@@ -37,7 +37,7 @@ class ServicePolicy
      */
     public function update(User $user, Service $service): bool
     {
-        //
+        return $user->id === $service->user_id;
     }
 
     /**
@@ -45,7 +45,7 @@ class ServicePolicy
      */
     public function delete(User $user, Service $service): bool
     {
-        //
+        return $user->id === $service->user_id;
     }
 
     /**

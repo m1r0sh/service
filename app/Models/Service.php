@@ -9,6 +9,14 @@ class Service extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'description',
+        'status',
+        'start_date',
+        'end_date'
+    ];
+
     public function executor()
     {
         return $this->belongsTo(Executor::class);
