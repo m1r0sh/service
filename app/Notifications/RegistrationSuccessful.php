@@ -11,5 +11,15 @@ class RegistrationSuccessful extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    public function via($notifiable)
+    {
+        return ['mail'];
+    }
 
+    public function toMail($notifiable)
+    {
+        return (new MailMessage)
+            ->subject('Registration Successful')
+            ->line('Congratulations! Your registration was successful.');
+    }
 }
