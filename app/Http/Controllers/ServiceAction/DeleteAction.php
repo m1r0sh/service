@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ServiceAction;
 use App\Http\Resources\ServiceResource;
 use App\Models\Service;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Str;
 
 
 class DeleteAction
@@ -27,7 +28,7 @@ class DeleteAction
         return response()->json([
             'message' => "$id id is deleted",
             'status' => JsonResponse::HTTP_NO_CONTENT,
-            'data' => new ServiceResource($data)
+            'data' => new ServiceResource($data),
         ]);
     }
 }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Events\ServiceCreated;
 use App\Http\Requests\StoreServiceRequest;
 use App\Http\Requests\UpdateServiceRequest;
-use App\Jobs\ServiceJob;
 use App\Models\Service;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;

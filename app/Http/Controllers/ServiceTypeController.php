@@ -4,63 +4,101 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreServiceTypeRequest;
 use App\Http\Requests\UpdateServiceTypeRequest;
+use App\Models\Attribute;
 use App\Models\ServiceType;
+use Illuminate\Http\JsonResponse;
 
 class ServiceTypeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $serviceType = ServiceType::select('name', 'description')
+            ->with('services')
+            ->with('attributes')
+            ->get();
+
+        if(empty($serviceType)) {
+            return response()->json([
+                'status' => JsonResponse::HTTP_NOT_FOUND,
+                'error' => 'List empty',
+            ]);
+        }
+
+        return response()->json([
+            'status' => JsonResponse::HTTP_OK,
+            'data' => $serviceType
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreServiceTypeRequest $request)
     {
-        //
+        $create = ServiceType::create($request->all());
+
+        return response()->json([
+            'message' => 'Data created',
+            'status' => JsonResponse::HTTP_CREATED,
+            'data' => $create
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(ServiceType $serviceType)
+    public function show($id)
     {
-        //
+        $serviceType = ServiceType::select('name', 'description')
+            ->where('id', $id)
+            ->with('services')
+            ->with('attributes')
+            ->get();
+
+        if(empty($serviceType)) {
+            return response()->json([
+                'status' => JsonResponse::HTTP_NOT_FOUND,
+                'error' => 'List empty',
+            ]);
+        }
+
+        return response()->json([
+            'status' => JsonResponse::HTTP_OK,
+            'data' => $serviceType
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ServiceType $serviceType)
+    public function update($id, UpdateServiceTypeRequest $request)
     {
-        //
+        $update = ServiceType::find($id);
+
+        if (!$update) {
+            return response()->json([
+                'error' => 'Not found',
+                'status' => JsonResponse::HTTP_NOT_FOUND
+            ]);
+        }
+
+        $update->update($request->validated());
+
+        return response()->json([
+            'message' => 'Data created',
+            'status' => JsonResponse::HTTP_ACCEPTED,
+            'data' => $update
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateServiceTypeRequest $request, ServiceType $serviceType)
+    public function destroy($id)
     {
-        //
-    }
+        $data = ServiceType::find($id);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ServiceType $serviceType)
-    {
-        //
+        if (!$data) {
+            return response()->json([
+                'error' => 'Not found',
+                'status' => JsonResponse::HTTP_NOT_FOUND
+            ]);
+        }
+
+        $data->delete();
+
+        return response()->json([
+            'message' => "$id id is deleted",
+            'status' => JsonResponse::HTTP_NO_CONTENT,
+            'data' => $data
+        ]);
     }
 }

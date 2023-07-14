@@ -5,62 +5,96 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAttributeRequest;
 use App\Http\Requests\UpdateAttributeRequest;
 use App\Models\Attribute;
+use Illuminate\Http\JsonResponse;
 
 class AttributeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
-    }
+        $attribute = Attribute::select('name', 'type', 'description', 'service_type_id')
+            ->with('serviceType')
+            ->get();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        if(empty($attribute)) {
+            return response()->json([
+                'status' => JsonResponse::HTTP_NOT_FOUND,
+                'error' => 'List empty',
+            ]);
+        }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+        return response()->json([
+            'status' => JsonResponse::HTTP_OK,
+            'data' => $attribute
+        ]);
+    }
     public function store(StoreAttributeRequest $request)
     {
-        //
+        $create = Attribute::create($request->all());
+
+        return response()->json([
+            'message' => 'Data created',
+            'status' => JsonResponse::HTTP_CREATED,
+            'data' => $create
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Attribute $attribute)
+    public function show($id)
     {
-        //
+        $attribute = Attribute::select('name', 'type', 'description', 'service_type_id')
+            ->where('id', $id)
+            ->with('serviceType')
+            ->get();
+
+        if(empty($attribute)) {
+            return response()->json([
+                'status' => JsonResponse::HTTP_NOT_FOUND,
+                'error' => 'List empty',
+            ]);
+        }
+
+        return response()->json([
+            'status' => JsonResponse::HTTP_OK,
+            'data' => $attribute
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Attribute $attribute)
+    public function update($id, UpdateAttributeRequest $request)
     {
-        //
+        $update = Attribute::find($id);
+
+        if (!$update) {
+            return response()->json([
+                'error' => 'Not found',
+                'status' => JsonResponse::HTTP_NOT_FOUND
+            ]);
+        }
+
+        $update->update($request->validated());
+
+        return response()->json([
+            'message' => 'Data created',
+            'status' => JsonResponse::HTTP_ACCEPTED,
+            'data' => $update
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateAttributeRequest $request, Attribute $attribute)
+    public function destroy($id)
     {
-        //
-    }
+        $data = Attribute::find($id);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Attribute $attribute)
-    {
-        //
+        if (!$data) {
+            return response()->json([
+                'error' => 'Not found',
+                'status' => JsonResponse::HTTP_NOT_FOUND
+            ]);
+        }
+
+        $data->delete();
+
+        return response()->json([
+            'message' => "$id id is deleted",
+            'status' => JsonResponse::HTTP_NO_CONTENT,
+            'data' => $data
+        ]);
     }
 }

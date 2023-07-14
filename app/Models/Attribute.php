@@ -18,6 +18,6 @@ class Attribute extends Model
 
     public function serviceType()
     {
-        return $this->belongsTo(ServiceType::class);
+        return $this->hasOne(ServiceType::class, 'id', 'service_type_id');
     }
 }
