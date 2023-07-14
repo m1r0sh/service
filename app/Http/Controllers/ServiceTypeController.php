@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreServiceTypeRequest;
 use App\Http\Requests\UpdateServiceTypeRequest;
-use App\Models\Attribute;
 use App\Models\ServiceType;
 use Illuminate\Http\JsonResponse;
 

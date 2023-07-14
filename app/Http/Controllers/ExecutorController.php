@@ -5,62 +5,98 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreExecutorRequest;
 use App\Http\Requests\UpdateExecutorRequest;
 use App\Models\Executor;
+use Illuminate\Http\JsonResponse;
 
 class ExecutorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
-//        Executor::
+        $executor = Executor::select('name', 'email', 'phone_number')
+            ->with('services')
+            ->get();
+
+        if(empty($executor)) {
+            return response()->json([
+                'status' => JsonResponse::HTTP_NOT_FOUND,
+                'error' => 'List empty',
+            ]);
+        }
+
+        return response()->json([
+            'status' => JsonResponse::HTTP_OK,
+            'data' => $executor
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreExecutorRequest $request)
     {
-        //
+        $create = Executor::create($request->all());
+
+        return response()->json([
+            'message' => 'Data created',
+            'status' => JsonResponse::HTTP_CREATED,
+            'data' => $create
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Executor $executor)
+    public function show($id)
     {
-        //
+        $executor = Executor::select('name', 'email', 'phone_number')
+            ->where('id', $id)
+            ->with('services')
+            ->get();
+
+        if(empty($executor)) {
+            return response()->json([
+                'status' => JsonResponse::HTTP_NOT_FOUND,
+                'error' => 'List empty',
+            ]);
+        }
+
+        return response()->json([
+            'status' => JsonResponse::HTTP_OK,
+            'data' => $executor
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Executor $executor)
+    public function update($id, UpdateExecutorRequest $request)
     {
-        //
+        $update = Executor::find($id);
+
+        if (!$update) {
+            return response()->json([
+                'error' => 'Not found',
+                'status' => JsonResponse::HTTP_NOT_FOUND
+            ]);
+        }
+
+        $update->update($request->validated());
+
+        return response()->json([
+            'message' => 'Data created',
+            'status' => JsonResponse::HTTP_ACCEPTED,
+            'data' => $update
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateExecutorRequest $request, Executor $executor)
+    public function destroy($id)
     {
-        //
-    }
+        $data = Executor::find($id);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Executor $executor)
-    {
-        //
+        if (!$data) {
+            return response()->json([
+                'error' => 'Not found',
+                'status' => JsonResponse::HTTP_NOT_FOUND
+            ]);
+        }
+
+        $data->delete();
+
+        return response()->json([
+            'message' => "$id id is deleted",
+            'status' => JsonResponse::HTTP_NO_CONTENT,
+            'data' => $data
+        ]);
     }
 }

@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Validation\ValidationException;
 
 class UpdateExecutorRequest extends FormRequest
 {
@@ -11,7 +14,7 @@ class UpdateExecutorRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +25,17 @@ class UpdateExecutorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string',
+            'email' => 'required|string|email',
+            'phone_number' => 'required|string',
         ];
+    }
+
+    protected function failedValidation(Validator $validator):JsonResponse
+    {
+        return throw new ValidationException($validator, response()->json([
+            'status' => JsonResponse::HTTP_BAD_REQUEST,
+            'errors' => $validator->errors()
+        ]));
     }
 }

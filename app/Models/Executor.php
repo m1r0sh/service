@@ -17,6 +17,6 @@ class Executor extends Model
 
     public function services()
     {
-        return $this->hasMany(Service::class);
+        return $this->hasMany(Service::class, 'executor_id', 'id');
     }
 }

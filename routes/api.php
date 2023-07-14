@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AttributeController;
+use App\Http\Controllers\ExecutorController;
 use App\Http\Controllers\JwtAuth\RegisterAction;
 use App\Http\Controllers\ServiceAction\MylistAction;
 use App\Http\Controllers\ServiceAction\SuccessAction;
@@ -42,7 +43,10 @@ Route::group([
     Route::resource('services', ServiceController::class);
     Route::resource('attributes', AttributeController::class);
     Route::resource('servicetypes', ServiceTypeController::class);
+    Route::resource('executors', ExecutorController::class);
+
     Route::get('/mylist', MylistAction::class);
     Route::get('/status/{id}', SuccessAction::class);
+    Route::get('/exelist', \App\Http\Controllers\Executor\MylistAction::class);
 
 });
