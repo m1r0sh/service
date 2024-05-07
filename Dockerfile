@@ -1,9 +1,9 @@
 FROM php:8.2-fpm
 
-ENV USER_NAME=murat_developer
-ENV USER_HOME=/home/murat_developer
+ENV USER_NAME=mmk
+ENV USER_HOME=/home/mmk_developer
 
-RUN useradd -m murat_developer
+RUN useradd -m mmk_developer
 
 # Install necessary packages and PHP extensions
 
