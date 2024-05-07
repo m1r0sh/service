@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -12,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        $schemaName = 'system_service';
+        $schemaName = 'log';
         $schemaExists = DB::select("
             SELECT schema_name
             FROM information_schema.schemata WHERE schema_name = ?", [$schemaName]);
@@ -20,12 +19,15 @@ return new class extends Migration
             DB::statement('CREATE SCHEMA '.$schemaName);
         }
 
-        Schema::create('system_service.executors', function (Blueprint $table) {
+        Schema::create('log.user_actions', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email');
-            $table->string('phone_number');
-            $table->timestamps();
+            $table->date('action_at');
+            $table->string('role')->nullable();
+            $table->string('level')->nullable();
+            $table->integer('action');
+
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -34,7 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('system_service.executors');
-        DB::statement('DROP SCHEMA IF EXISTS system_service CASCADE');
+        Schema::dropIfExists('log.user_actions');
     }
 };

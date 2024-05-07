@@ -11,10 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('system_service.service_types', function (Blueprint $table) {
+        $schemaName = 'note_tables';
+        $schemaExists = DB::select("
+            SELECT schema_name
+            FROM information_schema.schemata WHERE schema_name = ?", [$schemaName]);
+        if(empty($schemaExists)){
+            DB::statement('CREATE SCHEMA '.$schemaName);
+        }
+
+        Schema::create('note_tables.notes', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('description');
+            $table->string('title');
+            $table->text('content')->nullable();
+            $table->boolean('status')->default(false);
 
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('public.users')->onDelete('cascade');
@@ -28,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('service_types');
+        Schema::dropIfExists('note_tables.notes');
     }
 };

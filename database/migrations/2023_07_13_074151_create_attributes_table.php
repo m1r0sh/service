@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attributes', function (Blueprint $table) {
+        Schema::create('system_service.attributes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('type');
@@ -19,7 +19,7 @@ return new class extends Migration
 
             $table->unsignedBigInteger('service_type_id');
 
-            $table->foreign('service_type_id')->references('id')->on('service_types');
+            $table->foreign('service_type_id')->references('id')->on('system_service.service_types');
 
             $table->timestamps();
         });
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attributes');
+        Schema::dropIfExists('system_service.attributes');
     }
 };
