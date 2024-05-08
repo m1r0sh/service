@@ -131,7 +131,13 @@ return [
             'driver' => 'single',
             'path' => storage_path('logs/user_note.log'),
             'level' => 'debug',
-        ]
+        ],
+
+        'user_auth' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/user_auth.log'),
+            'level' => 'debug',
+        ],
     ],
 
 ];

@@ -32,7 +32,7 @@ class RegistrationService
 
             DB::commit();
 
-            Log::channel('user_note')->info('New User created', [
+            Log::channel('user_auth')->info('New User created', [
                 'user_id' => auth()->id(),
                 'action' => 'Create User',
                 'level' => 'info'
@@ -45,7 +45,7 @@ class RegistrationService
         } catch (\Exception $e) {
             DB::rollBack();
 
-            Log::channel('user_note')->error('Couldnt create New User', [
+            Log::channel('user_auth')->error('Couldnt create New User', [
                 'user_id' => auth()->id(),
                 'action' => 'Error create User',
                 'level' => 'error'

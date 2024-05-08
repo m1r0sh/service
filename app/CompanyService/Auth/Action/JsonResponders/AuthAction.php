@@ -5,23 +5,27 @@ namespace App\CompanyService\Auth\Action\JsonResponders;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use App\CompanyService\Auth\Domain\Requests\AuthRequest as Request;
+use App\CompanyService\Auth\Domain\Services\AuthService as Service;
 use App\Domains\Helpers\JwtHelpers;
 
 class AuthAction extends  Controller
 {
     public function __construct(
+        private Service $service,
         private Request $request,
         private JwtHelpers $helpers
     ){}
 
     public function __invoke(): JsonResponse
     {
-        $data = $this->request->validated();
+        $token = $this->service->handle($this->request->validated());
 
-        if (! $token = auth()->attempt($data)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
+        return match (true) {
+            $token['check'] => $this->helpers->respondWithToken($token['token']),
 
-        return $this->helpers->respondWithToken($token);
+            default => response()->json([
+                'error' => $token['error']
+            ], 401)
+        };
     }
 }
