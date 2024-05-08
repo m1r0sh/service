@@ -46,29 +46,32 @@ Route::group([
 
     ////////////////////
     /// //////////////
-    Route::group([
-        'prefix' => 'services'
-    ], function () {
-        Route::resource('services', ServiceController::class);
-    });
 
-    Route::group([
-        'prefix' => 'attributes'
-    ], function () {
-        Route::resource('attributes', AttributeController::class);
-    });
 
-    Route::group([
-        'prefix' => 'servicetypes'
-    ], function () {
-        Route::resource('servicetypes', ServiceTypeController::class);
-    });
 
-    Route::group([
-        'prefix' => 'executors'
-    ], function () {
-        Route::resource('executors', ExecutorController::class);
-    });
+//    Route::group([
+//        'prefix' => 'services'
+//    ], function () {
+//        Route::resource('services', ServiceController::class);
+//    });
+//
+//    Route::group([
+//        'prefix' => 'attributes'
+//    ], function () {
+//        Route::resource('attributes', AttributeController::class);
+//    });
+//
+//    Route::group([
+//        'prefix' => 'servicetypes'
+//    ], function () {
+//        Route::resource('servicetypes', ServiceTypeController::class);
+//    });
+//
+//    Route::group([
+//        'prefix' => 'executors'
+//    ], function () {
+//        Route::resource('executors', ExecutorController::class);
+//    });
 });
 
 
