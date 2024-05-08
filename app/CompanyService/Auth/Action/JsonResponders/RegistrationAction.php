@@ -20,6 +20,13 @@ class RegistrationAction extends Controller
     {
         $token = $this->service->handle($this->request->validated());
 
-        return $this->helpers->respondWithToken($token);
+        return match (true) {
+            $token['check'] => $this->helpers->respondWithToken($token['data']),
+
+            default => response()->json([
+                'message' => 'Registration failed',
+                'error' => $token['data']
+            ], JsonResponse::HTTP_BAD_REQUEST)
+        };
     }
 }

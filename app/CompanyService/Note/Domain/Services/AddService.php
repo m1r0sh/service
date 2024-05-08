@@ -4,6 +4,7 @@ namespace App\CompanyService\Note\Domain\Services;
 
 use App\CompanyService\Note\Domain\Models\Notes;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AddService
 {
@@ -12,14 +13,19 @@ class AddService
         DB::beginTransaction();
 
         try {
-            Notes::create([
+            $notes = Notes::create([
                 'title' => $data['title'],
                 'content' => $data['content'],
                 'status' => $data['status'],
                 'user_id' => auth()->id(),
             ]);
 
-            //LOG HERE
+            Log::channel('user_note')->info('User created new note', [
+                'user_id' => auth()->id(),
+                'note_id' => $notes['id'],
+                'action' => 'Create note',
+                'level' => 'info'
+            ]);
 
             DB::commit();
 
@@ -27,6 +33,12 @@ class AddService
 
         } catch (\Exception $e) {
             DB::rollBack();
+
+            Log::channel('user_note')->error('User couldnt add new note', [
+                'user_id' => auth()->id(),
+                'action' => 'Error note',
+                'level' => 'error'
+            ]);
 
             return false;
         }
