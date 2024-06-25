@@ -70,7 +70,9 @@ RUN pecl install xdebug \
 
 RUN #composer dump-autoload --optimize && composer run-script post-install-cmd
 # Set permissions and working directory
-RUN chmod -R 777 /var/www/
 WORKDIR /var/www/
+COPY . .
 COPY composer.json composer.lock ./
-RUN composer install --no-scripts --no-autoloader --no-dev
+
+RUN chown -R www-data:www-data /var/www/storage
+RUN composer install
