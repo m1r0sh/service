@@ -16,7 +16,7 @@ class EditableTable extends Component
             ['alpine_input' => '', 'input' => '']
         ]);
 
-        dd($this->rows);
+//        dd($this->rows);
     }
 
     public function addRow()
