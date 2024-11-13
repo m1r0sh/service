@@ -4,8 +4,8 @@ namespace App\Domains\Requests;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 
 class RequestDefault extends FormRequest
 {
@@ -15,9 +15,19 @@ class RequestDefault extends FormRequest
     }
     protected function failedValidation(Validator $validator)
     {
-        return throw new ValidationException($validator, response()->json([
-            'status' => JsonResponse::HTTP_UNPROCESSABLE_ENTITY,
-            'errors' => $validator->errors()
-        ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
+        // Игнорируем валидацию, если команда выполняется в консоли
+        if ($this->isRunningInConsole()) {
+            return;
+        }
+
+        throw (new ValidationException($validator))
+            ->errorBag($this->errorBag)
+            ->redirectTo($this->getRedirectUrl());
     }
+
+    protected function isRunningInConsole(): bool
+    {
+        return app()->runningInConsole();
+    }
+
 }
